@@ -8,7 +8,7 @@
 <style>
   :root {
     --bg: #0a0a0f;
-    --surface: #12121a;
+    --surface: #24242a;
     --card: #1a1a26;
     --border: #2a2a3d;
     --accent: #7c6af7;
