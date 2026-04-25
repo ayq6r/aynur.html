@@ -18,6 +18,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background-color: var(--bg-black);
             color: var(--text-white);
@@ -31,21 +32,33 @@
         }
 
         /* SIDEBAR */
-        aside { grid-area: sidebar; background-color: var(--bg-black); padding: 24px 12px; border-right: 1px solid var(--border); }
+        aside { 
+            grid-area: sidebar; 
+            background-color: var(--bg-black); 
+            padding: 24px 12px; 
+            display: flex; 
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+        }
         .logo { font-size: 22px; font-weight: 700; color: var(--text-white); margin-bottom: 30px; padding-left: 10px; }
         .logo span { color: var(--spotify-green); }
         nav ul { list-style: none; }
-        nav ul li a { color: var(--text-gray); text-decoration: none; padding: 12px; display: block; transition: 0.3s; font-weight: 600; }
-        nav ul li a:hover { color: white; }
+        nav ul li a { color: var(--text-gray); text-decoration: none; padding: 12px; display: block; border-radius: 4px; transition: 0.3s; font-weight: 600; }
+        nav ul li a:hover, nav ul li a.active { color: white; background: var(--bg-card-hover); }
 
-        /* MAIN */
-        main { grid-area: main; background: linear-gradient(to bottom, #222, var(--bg-base)); padding: 32px; overflow-y: auto; }
-        .section-title { font-size: 28px; margin-bottom: 24px; }
+        /* MAIN CONTENT */
+        main { 
+            grid-area: main; 
+            background: linear-gradient(to bottom, #222, var(--bg-base)); 
+            padding: 32px; 
+            overflow-y: auto; 
+        }
+        .section-title { font-size: 28px; margin-bottom: 24px; font-weight: 700; }
         
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
+            gap: 24px;
         }
 
         .music-card {
@@ -53,30 +66,34 @@
             padding: 16px;
             border-radius: 10px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             position: relative;
         }
         .music-card:hover { background: var(--bg-card-hover); transform: translateY(-5px); }
-        .music-card img { width: 100%; aspect-ratio: 1; border-radius: 8px; margin-bottom: 12px; object-fit: cover; }
-        .music-card h3 { font-size: 16px; margin-bottom: 5px; }
+        .music-card img { width: 100%; aspect-ratio: 1; border-radius: 8px; margin-bottom: 12px; object-fit: cover; box-shadow: 0 8px 16px rgba(0,0,0,0.5); }
+        .music-card h3 { font-size: 16px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .music-card p { font-size: 13px; color: var(--text-gray); }
 
-        .play-icon-overlay {
+        /* Play Button Hover Overlay */
+        .play-btn-overlay {
             position: absolute;
-            bottom: 80px;
+            bottom: 85px;
             right: 25px;
             background: var(--spotify-green);
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: 0.3s;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            color: black;
+            font-size: 20px;
         }
-        .music-card:hover .play-icon-overlay { opacity: 1; bottom: 90px; }
+        .music-card:hover .play-btn-overlay { opacity: 1; transform: translateY(0); }
 
         /* PLAYER BAR */
         .player-bar {
@@ -86,140 +103,166 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 25px;
+            z-index: 10;
         }
 
         .current-track { display: flex; align-items: center; gap: 15px; width: 30%; }
-        .current-track img { width: 60px; height: 60px; border-radius: 5px; }
+        .current-track img { width: 56px; height: 56px; border-radius: 4px; object-fit: cover; background: #282828; }
+        .track-info h4 { font-size: 14px; margin-bottom: 3px; }
+        .track-info p { font-size: 11px; color: var(--text-gray); }
         
-        .player-controls { width: 40%; text-align: center; }
-        .progress-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-        .progress-bar { flex: 1; height: 4px; background: #4d4d4d; border-radius: 2px; cursor: pointer; }
-        #progress { height: 100%; background: var(--spotify-green); width: 0%; border-radius: 2px; }
-
-        .btn-circle {
-            background: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: black;
-            cursor: pointer;
-            font-weight: bold;
+        .player-controls { width: 40%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .control-btns { display: flex; align-items: center; gap: 25px; font-size: 18px; }
+        .play-pause-main { 
+            background: white; color: black; width: 32px; height: 32px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.2s; font-size: 14px;
         }
+        .play-pause-main:hover { transform: scale(1.1); }
+
+        .progress-area { width: 100%; display: flex; align-items: center; gap: 10px; }
+        .time { font-size: 11px; color: var(--text-gray); min-width: 35px; }
+        .progress-bg { flex: 1; height: 4px; background: #4d4d4d; border-radius: 2px; cursor: pointer; position: relative; }
+        .progress-fill { height: 100%; background: var(--spotify-green); width: 0%; border-radius: 2px; transition: width 0.1s linear; }
+
+        .volume-area { width: 30%; display: flex; justify-content: flex-end; color: var(--text-gray); font-size: 14px; }
     </style>
 </head>
 <body>
 
     <aside>
-        <div class="logo"><span>Code</span>Beat</div>
+        <div class="logo"><span>Code</span>Beat 🎧</div>
         <nav>
             <ul>
-                <li><a href="#">🏠 Ana Sayfa</a></li>
-                <li><a href="#">🔍 Kitaplığın</a></li>
+                <li><a href="#" class="active">🏠 Ana Sayfa</a></li>
+                <li><a href="#">🔍 Ara</a></li>
+                <li><a href="#">📚 Kitaplığın</a></li>
             </ul>
         </nav>
     </aside>
 
     <main>
-        <h2 class="section-title">Koleksiyonun</h2>
+        <h2 class="section-title">Senin İçin Seçilenler</h2>
         <div class="grid-container">
-            <div class="music-card" onclick="playMusic('Fikrimin İnce Gülü', 'Özdemir Erdoğan', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=300')">
-                <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=300" alt="Fikrim">
+            
+            <div class="music-card" onclick="playMusic('Fikrimin İnce Gülü', 'Dedublüman', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 'https://images.unsplash.com/photo-1514525253344-76240003a568?w=400')">
+                <img src="https://images.unsplash.com/photo-1514525253344-76240003a568?w=400" alt="Fikrimin İnce Gülü">
                 <h3>Fikrimin İnce Gülü</h3>
-                <p>Özdemir Erdoğan</p>
-                <div class="play-icon-overlay">▶</div>
+                <p>Dedublüman</p>
+                <div class="play-btn-overlay">▶</div>
             </div>
 
-            <div class="music-card" onclick="playMusic('Ankara Rüzgarı', 'Zeki Müren', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', 'https://images.unsplash.com/photo-1459749411177-042180ce673c?w=300')">
-                <img src="https://images.unsplash.com/photo-1459749411177-042180ce673c?w=300" alt="Zeki">
-                <h3>Ankara Rüzgarı</h3>
-                <p>Zeki Müren</p>
-                <div class="play-icon-overlay">▶</div>
+            <div class="music-card" onclick="playMusic('100. Yıl Marşı', 'Kıraç', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=400')">
+                <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=400" alt="100. Yıl Marşı">
+                <h3>100. Yıl Marşı</h3>
+                <p>Kıraç</p>
+                <div class="play-btn-overlay">▶</div>
             </div>
 
-            <div class="music-card" onclick="playMusic('Lo-Fi Coding Beats', 'CodeLab Special', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', 'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=300')">
-                <img src="https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=300" alt="Lo-Fi">
-                <h3>Lo-Fi Coding Beats</h3>
-                <p>Focus & Study</p>
-                <div class="play-icon-overlay">▶</div>
+            <div class="music-card" onclick="playMusic('Lo-Fi Coding', 'CodeLab', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400')">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" alt="Coding">
+                <h3>Odaklanma (Coding)</h3>
+                <p>CodeLab Beats</p>
+                <div class="play-btn-overlay">▶</div>
             </div>
+
         </div>
     </main>
 
     <div class="player-bar">
         <div class="current-track">
-            <img id="player-img" src="https://via.placeholder.com/60" alt="">
+            <img id="p-img" src="https://via.placeholder.com/56" alt="">
             <div class="track-info">
-                <h4 id="player-title">Şarkı Seçin</h4>
-                <p id="player-artist">-</p>
+                <h4 id="p-title">Şarkı seçin</h4>
+                <p id="p-artist">-</p>
             </div>
         </div>
 
         <div class="player-controls">
-            <div class="btn-circle" id="playPauseBtn" onclick="togglePlay()">▶</div>
-            <div class="progress-container">
-                <span id="currentTime">0:00</span>
-                <div class="progress-bar" onclick="seek(event)">
-                    <div id="progress"></div>
+            <div class="control-btns">
+                <span>⏮</span>
+                <div class="play-pause-main" id="mainPlayBtn" onclick="togglePlay()">▶</div>
+                <span>⏭</span>
+            </div>
+            <div class="progress-area">
+                <span class="time" id="time-current">0:00</span>
+                <div class="progress-bg" onclick="seek(event)">
+                    <div class="progress-fill" id="p-fill"></div>
                 </div>
-                <span id="duration">0:00</span>
+                <span class="time" id="time-total">0:00</span>
             </div>
         </div>
 
-        <audio id="mainAudio" src=""></audio>
+        <div class="volume-area">
+            🔊 [ —————— ]
+        </div>
     </div>
 
-    <script>
-        const audio = document.getElementById('mainAudio');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const progressBar = document.getElementById('progress');
-        const playerTitle = document.getElementById('player-title');
-        const playerArtist = document.getElementById('player-artist');
-        const playerImg = document.getElementById('player-img');
+    <audio id="audioEngine"></audio>
 
-        function playMusic(title, artist, url, img) {
-            playerTitle.innerText = title;
-            playerArtist.innerText = artist;
-            playerImg.src = img;
-            audio.src = url;
+    <script>
+        const audio = document.getElementById('audioEngine');
+        const playBtn = document.getElementById('mainPlayBtn');
+        const fill = document.getElementById('p-fill');
+        const title = document.getElementById('p-title');
+        const artist = document.getElementById('p-artist');
+        const img = document.getElementById('p-img');
+        const currTimeText = document.getElementById('time-current');
+        const totalTimeText = document.getElementById('time-total');
+
+        function playMusic(sTitle, sArtist, sUrl, sImg) {
+            title.innerText = sTitle;
+            artist.innerText = sArtist;
+            img.src = sImg;
+            audio.src = sUrl;
+            
             audio.play();
-            playPauseBtn.innerText = '⏸';
+            playBtn.innerText = '⏸';
         }
 
         function togglePlay() {
+            if (!audio.src) return;
             if (audio.paused) {
                 audio.play();
-                playPauseBtn.innerText = '⏸';
+                playBtn.innerText = '⏸';
             } else {
                 audio.pause();
-                playPauseBtn.innerText = '▶';
+                playBtn.innerText = '▶';
             }
         }
 
-        audio.ontimeupdate = function() {
-            const pct = (audio.currentTime / audio.duration) * 100;
-            progressBar.style.width = pct + "%";
+        // İlerleme çubuğu güncelleme
+        audio.addEventListener('timeupdate', () => {
+            const position = audio.currentTime / audio.duration;
+            fill.style.width = (position * 100) + '%';
             
-            // Zaman güncelleme
-            document.getElementById('currentTime').innerText = formatTime(audio.currentTime);
-            if(audio.duration) document.getElementById('duration').innerText = formatTime(audio.duration);
+            currTimeText.innerText = formatTime(audio.currentTime);
+            if(audio.duration) {
+                totalTimeText.innerText = formatTime(audio.duration);
+            }
+        });
+
+        function formatTime(seconds) {
+            let min = Math.floor(seconds / 60);
+            let sec = Math.floor(seconds % 60);
+            if (sec < 10) sec = '0' + sec;
+            return min + ':' + sec;
+        }
+
+        function seek(event) {
+            if(!audio.src) return;
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const width = rect.width;
+            const percentage = x / width;
+            audio.currentTime = percentage * audio.duration;
+        }
+
+        // Şarkı bittiğinde butonu sıfırla
+        audio.onended = () => {
+            playBtn.innerText = '▶';
         };
-
-        function formatTime(sec) {
-            let min = Math.floor(sec / 60);
-            let s = Math.floor(sec % 60);
-            if (s < 10) s = "0" + s;
-            return min + ":" + s;
-        }
-
-        function seek(e) {
-            const rect = e.target.closest('.progress-bar').getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            audio.currentTime = pos * audio.duration;
-        }
     </script>
 </body>
 </html>
